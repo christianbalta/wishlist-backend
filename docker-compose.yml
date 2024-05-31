@@ -1,0 +1,6 @@
+﻿services:
+  wishlistapi:
+    image: wishlistapi
+    build:
+      context: .
+      dockerfile: WishlistAPI/Dockerfile
