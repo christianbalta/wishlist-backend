@@ -19,9 +19,11 @@ public class WishlistController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<WishlistItem>>> GetWishlistItems()
     {
-        return await _context.WishlistItems.ToListAsync();
+        var items = await _context.WishlistItems.OrderBy(item => item.Name).ToListAsync();
+
+        return Ok(items);
     }
-    
+
     [HttpGet("{id}")]
     public async Task<ActionResult<WishlistItem>> GetWishlistItem(int id)
     {
@@ -34,7 +36,7 @@ public class WishlistController : ControllerBase
 
         return item;
     }
-    
+
     [HttpPut("{id}")]
     public async Task<IActionResult> PutWishlistItem(int id, WishlistItem item)
     {

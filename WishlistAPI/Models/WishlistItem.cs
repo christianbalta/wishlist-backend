@@ -7,4 +7,5 @@ public class WishlistItem
     public string Description { get; set; }
     public int Price { get; set; }
     public bool IsReserved { get; set; }
+    public string Link { get; set; }
 }
