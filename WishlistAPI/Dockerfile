@@ -1,23 +1,33 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
+﻿# Use the official .NET SDK image to build the application
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
+
+# Set the working directory inside the container
 WORKDIR /src
-COPY ["WishlistAPI/WishlistAPI.csproj", "WishlistAPI/"]
+
+# Copy the .csproj file and restore any dependencies
+COPY WishlistAPI/WishlistAPI.csproj WishlistAPI/
 RUN dotnet restore "WishlistAPI/WishlistAPI.csproj"
-COPY . .
-WORKDIR "/src/WishlistAPI"
-RUN dotnet build "WishlistAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "WishlistAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Copy the rest of the application code
+COPY WishlistAPI/ WishlistAPI/
 
-FROM base AS final
+# Set the working directory inside the container
+WORKDIR /src/WishlistAPI
+
+# Build the application
+RUN dotnet publish -c Release -o /app
+
+# Use the official .NET runtime image to run the application
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+
+# Set the working directory inside the container
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+# Copy the build output from the build image
+COPY --from=build /app .
+
+# Expose the port the application runs on
+EXPOSE 8080
+
+# Specify the command to run the application
 ENTRYPOINT ["dotnet", "WishlistAPI.dll"]
