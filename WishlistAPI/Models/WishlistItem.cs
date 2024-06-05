@@ -8,4 +8,5 @@ public class WishlistItem
     public int Price { get; set; }
     public bool IsReserved { get; set; }
     public string Link { get; set; }
+    public string ImageLink { get; set; }
 }
