@@ -34,6 +34,10 @@ namespace WishlistAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("ImageLink")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsReserved")
                         .HasColumnType("boolean");
 
